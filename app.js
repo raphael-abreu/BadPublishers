@@ -1,23 +1,46 @@
-var cool = require('cool-ascii-faces');
 var express = require('express');
+
+/*
+ * body-parser is a piece of express middleware that 
+ *   reads a form's input and stores it as a javascript
+ *   object accessible through `req.body` 
+ *
+ * 'body-parser' must be installed (via `npm install --save body-parser`)
+ * For more info see: https://github.com/expressjs/body-parser
+ */
+var bodyParser = require('body-parser');
+
+// create our app
 var app = express();
 
-app.set('port', (process.env.PORT || 5000));
+// instruct the app to use the `bodyParser()` middleware for all routes
+app.use(bodyParser());
 
-app.use(express.static(__dirname + '/public'));
-
-// views is directory for all template files
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-
-app.get('/', function(request, response) {
-  response.render('pages/index')
+// A browser's default method is 'GET', so this
+// is the route that express uses when we visit
+// our site initially.
+app.get('/', function(req, res){
+  // The form's action is '/' and its method is 'POST',
+  // so the `app.post('/', ...` route will receive the
+  // result of our form
+  var html = '<form action="/" method="post">' +
+               'Enter your name:' +
+               '<input type="text" name="userName" placeholder="..." />' +
+               '<br>' +
+               '<button type="submit">Submit</button>' +
+            '</form>';
+               
+  res.send(html);
 });
 
-app.get('/cool', function(request, response) {
-  response.send(cool());
+// This route receives the posted form.
+// As explained above, usage of 'body-parser' means
+// that `req.body` will be filled in with the form elements
+app.post('/', function(req, res){
+  var userName = req.body.userName;
+  var html = 'Hello: ' + userName + '.<br>' +
+             '<a href="/">Try again.</a>';
+  res.send(html);
 });
 
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
-});
+app.listen(80);
