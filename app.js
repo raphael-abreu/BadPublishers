@@ -39,6 +39,7 @@ var items = [];
 
 
 app.get('/', function(req, res) {
+var items = [];
 	  res.render('index', { items })
 });
 
@@ -78,7 +79,8 @@ app.post('/', function(req, res){
 	items.push({number: item[0], article: item[1], publisher: item[2],badPublisher: item[3], journal: item[4],badJournal: item[5]});
 	item = []; // unset
 	}
-res.render('index', { items, contador: cont })
+res.render('index', { items, contador: cont });
+var items = [];
 });
 
 
