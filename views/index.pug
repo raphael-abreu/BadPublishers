@@ -1,0 +1,85 @@
+doctype html
+html
+  head
+    title Busca de Publishers/Journals predat&oacute;rios
+    link(href='http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css', rel='stylesheet')
+  body
+    .navbar
+      .navbar-inner
+        a.brand(href='#')
+          | Busca de Publishers/Journals 
+          strong predat&oacute;rios
+    |     
+    #main.container
+      table.table.table-striped
+        tr
+          td(style='width: 1px;')
+          td
+            b Artigos
+        if !publisherResponse
+         each item in items
+           tr
+             td
+               span.label= item.number
+             |                 
+             td
+               p
+                 strong=item.article
+               |                 
+               p
+                 if (typeof(item.publisher) !== 'undefined')
+                   span Publisher: 
+                   |  
+                   span= item.publisher
+                   |  
+                   br
+                   if item.badPublisher == false
+                    span.label.label-success  Ok
+                   else
+                    span.label.label-important Encontrado! 
+                    span= " "+item.badPublisher
+                    - var warning = true
+               |                 
+               p
+                 if (typeof(item.journal) !== 'undefined')
+                   span Revista: 
+                   |  
+                   span= item.journal
+                   br
+                   if item.badJournal == false
+                    span.label.label-success  Ok
+                   else
+                    span.label.label-important Encontrado! 
+                    span= " "+item.badJournal
+                    - var warning = true 
+      |                     
+      .container
+        if warning
+          span.label.label-warning Atenção! 
+          span  Você tem Ocorrências de possíveis jornais ou revistas predatórias. 
+          span  Avalie os nomes com cuidado em: 
+          a(href='https://scholarlyoa.com/') https://scholarlyoa.com/
+        .col-xs-12.col-md-6.col-lg-1
+          h1 Testar bibliografia
+          |                             
+          form(action='/',method='post')
+            .form-group
+              textarea.form-control(name='formImput',style='width: 90%;height:200px;', placeholder='Cole sua referência em formato bib')
+            |                                
+            button.btn.btn-default(type='Verificar') Enviar
+          h3 Testar publisher
+          |                             
+          form(action='/checkpub',method='post')
+            .form-group
+              input.form-control(name='publisherImput',style='width: 40%;height:20px;', placeholder='digite o nome do publisher')                              
+              button.btn.btn-default(type='Consultar') Consultar
+          if publisherResponse
+           if publisherType
+              span.label.label-important Atenção!
+              span  Possível publisher predatório.
+              span  Veja mais informações em: 
+              a(href='https://scholarlyoa.com/') https://scholarlyoa.com/
+
+           else
+             span.label.label-success  Ok
+
